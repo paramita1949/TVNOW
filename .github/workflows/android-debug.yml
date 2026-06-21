@@ -40,9 +40,6 @@ jobs:
         run: |
           echo "CHAQUOPY_BUILD_PYTHON=$(python -c 'import sys; print(sys.executable)')" >> "$GITHUB_ENV"
 
-      - name: Cache Gradle
-        uses: gradle/actions/setup-gradle@v3
-
       - name: Build debug APK
         run: |
           chmod +x ./gradlew
