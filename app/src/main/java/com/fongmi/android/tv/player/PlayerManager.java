@@ -226,20 +226,24 @@ public class PlayerManager implements ParseCallback {
 
     public void setDanmakuController(DanmakuController controller) {
         releaseDanmakuController();
+        if (controller == null) return;
         danmakuController = controller;
         danmakuController.setOkHttpClient(OkHttp.player());
         danmakuController.setConfig(DanmakuSetting.getConfig());
     }
 
     public void setDanmakuConfig(DanmakuConfig config) {
+        if (danmakuController == null) return;
         danmakuController.setConfig(config);
     }
 
     public void setDanmakuEnabled(boolean enabled) {
+        if (danmakuController == null) return;
         danmakuController.setEnabled(enabled);
     }
 
     public void sendDanmaku(String text) {
+        if (danmakuController == null) return;
         danmakuController.sendNow(text);
     }
 
@@ -302,21 +306,17 @@ public class PlayerManager implements ParseCallback {
     }
 
     public long getTextOffsetMs() {
-        if (player.isCommandAvailable(Player.COMMAND_GET_TEXT_OFFSET)) return player.getTextOffsetMs();
         return 0;
     }
 
     public void setTextOffsetMs(long offsetMs) {
-        if (player.isCommandAvailable(Player.COMMAND_SET_TEXT_OFFSET)) player.setTextOffsetMs(offsetMs);
     }
 
     public long getAudioOffsetMs() {
-        if (player.isCommandAvailable(Player.COMMAND_GET_AUDIO_OFFSET)) return player.getAudioOffsetMs();
         return 0;
     }
 
     public void setAudioOffsetMs(long offsetMs) {
-        if (player.isCommandAvailable(Player.COMMAND_SET_AUDIO_OFFSET)) player.setAudioOffsetMs(offsetMs);
     }
 
     public void reset() {
@@ -446,11 +446,6 @@ public class PlayerManager implements ParseCallback {
             setTrack(Track.find(getKey()));
             callback.onTracksChanged();
             initTrack = true;
-        }
-
-        @Override
-        public void onMediaTitlesChanged(@NonNull List<MediaTitle> titles) {
-            callback.onTitlesChanged();
         }
 
         @Override

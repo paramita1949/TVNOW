@@ -15,6 +15,7 @@ import com.fongmi.android.tv.player.exo.ExoUtil;
 import com.fongmi.android.tv.player.exo.TrackUtil;
 import com.fongmi.android.tv.utils.ResUtil;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -121,12 +122,12 @@ public class ExoPlayerEngine implements PlayerEngine {
 
     @Override
     public boolean haveTitle() {
-        return !player.getCurrentMediaTitles().isEmpty();
+        return false;
     }
 
     @Override
     public List<MediaTitle> getCurrentMediaTitles() {
-        return player.getCurrentMediaTitles();
+        return Collections.emptyList();
     }
 
     @Override

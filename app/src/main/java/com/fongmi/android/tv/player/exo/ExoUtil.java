@@ -23,6 +23,7 @@ import androidx.media3.exoplayer.trackselection.TrackSelector;
 import androidx.media3.exoplayer.util.EventLogger;
 import androidx.media3.ui.CaptionStyleCompat;
 import androidx.media3.ui.PlayerView;
+import androidx.media3.ui.SubtitleView;
 
 import com.fongmi.android.tv.App;
 import com.fongmi.android.tv.BuildConfig;
@@ -32,7 +33,6 @@ import com.fongmi.android.tv.player.PlayerHelper;
 import com.fongmi.android.tv.player.engine.PlaySpec;
 import com.fongmi.android.tv.player.engine.PlayerEngine;
 import com.fongmi.android.tv.setting.PlayerSetting;
-import com.fongmi.android.tv.setting.Setting;
 import com.fongmi.android.tv.utils.UrlUtil;
 
 import java.util.ArrayList;
@@ -42,17 +42,16 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.github.anilbeesetti.nextlib.media3ext.ffdecoder.NextRenderersFactory;
-
 public class ExoUtil {
 
     public static void setPlayerView(PlayerView view) {
-        view.setRender(PlayerSetting.getRender());
-        view.getSubtitleView().setStyle(getCaptionStyle());
-        view.getSubtitleView().setApplyEmbeddedStyles(true);
-        view.getSubtitleView().setApplyEmbeddedFontSizes(false);
-        if (PlayerSetting.getSubtitlePosition() != 0) view.getSubtitleView().setBottomPosition(PlayerSetting.getSubtitlePosition());
-        if (PlayerSetting.getSubtitleTextSize() != 0) view.getSubtitleView().setFractionalTextSize(PlayerSetting.getSubtitleTextSize());
+        SubtitleView subtitleView = view.getSubtitleView();
+        if (subtitleView == null) return;
+        subtitleView.setStyle(getCaptionStyle());
+        subtitleView.setApplyEmbeddedStyles(true);
+        subtitleView.setApplyEmbeddedFontSizes(false);
+        if (PlayerSetting.getSubtitlePosition() != 0) subtitleView.setBottomPaddingFraction(PlayerSetting.getSubtitlePosition());
+        if (PlayerSetting.getSubtitleTextSize() != 0) subtitleView.setFractionalTextSize(PlayerSetting.getSubtitleTextSize());
     }
 
     public static ExoPlayer buildPlayer(int decode, Player.Listener listener) {
@@ -71,11 +70,9 @@ public class ExoUtil {
         builder.setDrmConfiguration(buildDrmConfig(spec.getDrm()));
         builder.setRequestMetadata(buildRequestMetadata(spec));
         builder.setMediaMetadata(spec.getMetadata());
-        builder.setAdblock(Setting.isAdblock());
         builder.setMimeType(spec.getFormat());
         builder.setImageDurationMs(15000);
         builder.setMediaId(spec.getKey());
-        builder.setDecode(decode);
         return builder.build();
     }
 
@@ -115,7 +112,7 @@ public class ExoUtil {
     }
 
     private static RenderersFactory buildRenderersFactory(int renderMode) {
-        return new NextRenderersFactory(App.get()).setAudioPrefer(PlayerSetting.isAudioPrefer()).setVideoPrefer(PlayerSetting.isVideoPrefer()).setEnableDecoderFallback(true).setExtensionRendererMode(renderMode);
+        return new DefaultRenderersFactory(App.get()).setEnableDecoderFallback(true).setExtensionRendererMode(renderMode);
     }
 
     private static MediaSource.Factory buildMediaSourceFactory() {

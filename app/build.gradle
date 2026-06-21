@@ -109,7 +109,13 @@ dependencies {
     implementation project(':quickjs')
     implementation libs.appcompat
     implementation libs.lifecycle.service
-    implementation libs.media
+    implementation libs.media3.common
+    implementation libs.media3.database
+    implementation libs.media3.datasource.okhttp
+    implementation libs.media3.exoplayer
+    implementation libs.media3.extractor
+    implementation libs.media3.session
+    implementation libs.media3.ui
     implementation libs.palette
     implementation libs.recyclerview
     implementation libs.room.runtime
@@ -122,6 +128,7 @@ dependencies {
     implementation libs.customactivityoncrash
     implementation libs.eventbus
     implementation libs.flexbox
+    implementation libs.guava
     implementation libs.rtmp.client
     implementation libs.lottie
     implementation libs.material
