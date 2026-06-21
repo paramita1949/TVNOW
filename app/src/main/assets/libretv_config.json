@@ -100,6 +100,78 @@
       "changeable": 1
     },
     {
+      "key": "mdzyapi",
+      "name": "麻豆资源A",
+      "type": 1,
+      "api": "https://www.mdzyapi.com/api.php/provide/vod",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1
+    },
+    {
+      "key": "madouse",
+      "name": "MadouseA",
+      "type": 1,
+      "api": "http://www.madouse.la/api.php/provide/vod",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1
+    },
+    {
+      "key": "sex8zy8",
+      "name": "Sex8资源A",
+      "type": 1,
+      "api": "https://sex8zy8.com/api.php/provide/vod",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1
+    },
+    {
+      "key": "xingba",
+      "name": "杏吧A",
+      "type": 1,
+      "api": "https://xingba222.com/api.php/provide/vod",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1
+    },
+    {
+      "key": "apilj",
+      "name": "辣椒A",
+      "type": 1,
+      "api": "https://apilj.com/api.php/provide/vod",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1
+    },
+    {
+      "key": "lovedan",
+      "name": "LoveDanA",
+      "type": 1,
+      "api": "http://lovedan.net/api.php/provide/vod",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1
+    },
+    {
+      "key": "fhapi9",
+      "name": "凤凰A",
+      "type": 1,
+      "api": "http://fhapi9.com/api.php/provide/vod",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1
+    },
+    {
+      "key": "ckzy",
+      "name": "CK资源A",
+      "type": 1,
+      "api": "https://ckzy.me/api.php/provide/vod",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1
+    },
+    {
       "key": "wolong",
       "name": "卧龙资源",
       "type": 1,
