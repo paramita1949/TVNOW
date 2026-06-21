@@ -20,6 +20,9 @@ import com.github.bassaer.library.MDColor;
 
 public final class SubtitleDialog extends BaseBottomSheetDialog {
 
+    private static final float DEFAULT_BOTTOM_PADDING_FRACTION = 0.08f;
+    private static final float DEFAULT_TEXT_SIZE_FRACTION = 0.0533f;
+
     private DialogSubtitleBinding binding;
     private SubtitleView subtitleView;
 
@@ -67,29 +70,44 @@ public final class SubtitleDialog extends BaseBottomSheetDialog {
     }
 
     private void onUp(View view) {
-        subtitleView.addPosition(0.005f);
-        PlayerSetting.putSubtitlePosition(subtitleView.getPosition());
+        float position = Math.min(currentPosition() + 0.005f, 0.95f);
+        subtitleView.setBottomPaddingFraction(position);
+        PlayerSetting.putSubtitlePosition(position);
     }
 
     private void onDown(View view) {
-        subtitleView.subPosition(0.005f);
-        PlayerSetting.putSubtitlePosition(subtitleView.getPosition());
+        float position = Math.max(currentPosition() - 0.005f, 0f);
+        subtitleView.setBottomPaddingFraction(position);
+        PlayerSetting.putSubtitlePosition(position);
     }
 
     private void onLarge(View view) {
-        subtitleView.addTextSize(0.002f);
-        PlayerSetting.putSubtitleTextSize(subtitleView.getTextSize());
+        float textSize = Math.min(currentTextSize() + 0.002f, 0.2f);
+        subtitleView.setFractionalTextSize(textSize);
+        PlayerSetting.putSubtitleTextSize(textSize);
     }
 
     private void onSmall(View view) {
-        subtitleView.subTextSize(0.002f);
-        PlayerSetting.putSubtitleTextSize(subtitleView.getTextSize());
+        float textSize = Math.max(currentTextSize() - 0.002f, 0.02f);
+        subtitleView.setFractionalTextSize(textSize);
+        PlayerSetting.putSubtitleTextSize(textSize);
     }
 
     private void onReset(View view) {
         PlayerSetting.putSubtitleTextSize(0.0f);
         PlayerSetting.putSubtitlePosition(0.0f);
-        subtitleView.reset();
+        subtitleView.setBottomPaddingFraction(DEFAULT_BOTTOM_PADDING_FRACTION);
+        subtitleView.setFractionalTextSize(DEFAULT_TEXT_SIZE_FRACTION);
+    }
+
+    private float currentPosition() {
+        float position = PlayerSetting.getSubtitlePosition();
+        return position == 0f ? DEFAULT_BOTTOM_PADDING_FRACTION : position;
+    }
+
+    private float currentTextSize() {
+        float textSize = PlayerSetting.getSubtitleTextSize();
+        return textSize == 0f ? DEFAULT_TEXT_SIZE_FRACTION : textSize;
     }
 
     @Override
