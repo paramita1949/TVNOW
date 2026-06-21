@@ -1,5 +1,27 @@
-rootProject.name = "TVBox"
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        google()
+    }
+}
+
+plugins {
+    id "org.gradle.toolchains.foojay-resolver-convention" version "1.0.0"
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        google()
+        flatDir { dirs "$rootDir/app/libs" }
+        maven { url = "https://jitpack.io" }
+    }
+}
+
 include ':app'
-include ':player'
+include ':catvod'
+include ':chaquo'
 include ':quickjs'
-include ':pyramid'
+rootProject.name = "TV"

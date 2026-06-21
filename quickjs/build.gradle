@@ -1,46 +1,27 @@
 plugins {
-    id 'com.android.library'
+    alias libs.plugins.android.library
 }
 
 android {
-    compileSdkVersion 33
+    namespace = 'com.fongmi.android.tv.quickjs'
+
+    compileSdk libs.versions.compileSdk.get().toInteger()
 
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 28
-        externalNativeBuild {
-            cmake {
-                abiFilters 'armeabi-v7a', 'arm64-v8a'
-            }
-        }
+        minSdk libs.versions.minSdk.get().toInteger()
+        targetSdk libs.versions.targetSdk.get().toInteger()
     }
 
-    buildTypes {
-        debug {
-            ndk {
-                abiFilters 'armeabi-v7a', 'arm64-v8a'
-            }
-        }
-        release {
-            minifyEnabled false
-            ndk {
-                //noinspection ChromeOsAbiSupport
-                abiFilters 'armeabi-v7a', 'arm64-v8a'
-            }
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    externalNativeBuild {
-        /*cmake {
-            path file('src/main/cpp/CMakeLists.txt')
-            version "3.10.2"
-        }*/
+        coreLibraryDesugaringEnabled = true
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
 }
 
 dependencies {
+    implementation project(':catvod')
+    implementation libs.quickjs.android
+    implementation libs.quickjs.java
+    coreLibraryDesugaring libs.desugar
 }

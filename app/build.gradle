@@ -1,195 +1,142 @@
-apply plugin: 'com.android.application'
+plugins {
+    alias libs.plugins.android.application
+}
+
+def localProps = new Properties()
+def localPropsFile = rootProject.file('local.properties')
+if (localPropsFile.exists()) {
+    localPropsFile.withInputStream {
+        localProps.load(it)
+    }
+}
 
 android {
-    compileSdkVersion 33
+    namespace = 'com.fongmi.android.tv'
+
+    compileSdk libs.versions.compileSdk.get().toInteger()
 
     defaultConfig {
-        applicationId 'com.github.tvbox.osc.jun'
-        targetSdkVersion 28
-        versionCode 1
-        versionName '1.0.0'
-        multiDexEnabled true
-        //设置room的Schema的位置
+        applicationId "com.fongmi.android.tv"
+        minSdk libs.versions.minSdk.get().toInteger()
+        targetSdk libs.versions.targetSdk.get().toInteger()
+        versionCode 552
+        versionName "5.5.2"
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString(), "eventBusIndex": "com.fongmi.android.tv.event.EventIndex"]
             }
         }
     }
 
-    packagingOptions {
-        exclude 'META-INF/DEPENDENCIES'
-    }
+    flavorDimensions = ["mode", "abi"]
 
-    flavorDimensions "mode"
     productFlavors {
-        java {
+        leanback {
             dimension "mode"
-            minSdkVersion 19
-            ndk {
-                //noinspection ChromeOsAbiSupport
-                abiFilters 'armeabi-v7a', 'arm64-v8a'
-            }
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        java32 {
+        mobile {
             dimension "mode"
-            minSdkVersion 19
-            ndk {
-                //noinspection ChromeOsAbiSupport
-                abiFilters 'armeabi-v7a'
-            }
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        java64 {
-            dimension "mode"
-            minSdkVersion 21
-            ndk {
-                abiFilters 'arm64-v8a'
-            }
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        arm64_v8a {
+            dimension "abi"
+            ndk { abiFilters "arm64-v8a" }
         }
-        python {
-            dimension "mode"
-            minSdkVersion 19
-            ndk {
-                //noinspection ChromeOsAbiSupport
-                abiFilters 'armeabi-v7a', 'arm64-v8a'
-            }
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-python.pro'
-        }
-        python32 {
-            dimension "mode"
-            minSdkVersion 19
-            ndk {
-                //noinspection ChromeOsAbiSupport
-                abiFilters 'armeabi-v7a'
-            }
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-python.pro'
-        }
-        python64 {
-            dimension "mode"
-            minSdkVersion 21
-            ndk {
-                abiFilters 'arm64-v8a'
-            }
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-python.pro'
+        armeabi_v7a {
+            dimension "abi"
+            ndk { abiFilters "armeabi-v7a" }
         }
     }
 
-    sourceSets {
-        java {
-            java.srcDirs += 'src/normal/java'
-        }
-        java32 {
-            java.srcDirs += 'src/normal/java'
-        }
-        java64 {
-            java.srcDirs += 'src/normal/java'
-        }
-        python32 {
-            java.srcDirs += 'src/python/java'
-        }
-        python64 {
-            java.srcDirs += 'src/python/java'
+    buildFeatures {
+        buildConfig = true
+        viewBinding = true
+    }
+
+    signingConfigs {
+        release {
+            if (localProps['storeFile'] != null) storeFile file(localProps['storeFile'])
+            keyAlias localProps['keyAlias']
+            keyPassword localProps['storePassword']
+            storePassword localProps['storePassword']
         }
     }
 
     buildTypes {
-        debug {
-            minifyEnabled false
-        }
         release {
-            minifyEnabled true
+            minifyEnabled = true
+            shrinkResources = true
+            signingConfig = signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-rules-media.pro'
         }
     }
 
-    // 禁用 ABI 分割
-    splits {
-        abi {
-            enable false // 禁用 ABI 分割
+    configurations.configureEach {
+        exclude group: 'stax', module: 'stax-api'
+        exclude group: 'xpp3', module: 'xpp3'
+        exclude group: 'com.android.support'
+        resolutionStrategy {
+            force libs.okhttp
         }
     }
 
-    applicationVariants.configureEach { variant ->
-        variant.outputs.configureEach { output ->
-            def flavorNames = variant.productFlavors.collect { it.name }.join('-')
-            // 构建自定义文件名
-            def fileName = "TVBox_${variant.buildType.name}-${flavorNames}.apk"
-            outputFileName = fileName
-        }
+    lint {
+        disable 'UnsafeOptInUsageError'
+        disable 'ExpiredTargetSdkVersion'
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled = true
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
-
-    lintOptions {
-        checkReleaseBuilds false
-        abortOnError false
-    }
-//    dexOptions {
-//        javaMaxHeapSize "4g"
-//        additionalParameters += '--multi-dex'
-//        additionalParameters += '--set-max-idx-number=48000'
-//        additionalParameters += '--minimal-main-dex'
-//    }
 }
 
-repositories {
-
+androidComponents {
+    onVariants(selector().withBuildType('release')) { variant ->
+        def flavors = variant.productFlavors.collectEntries { [(it.first): it.second] }
+        def mode = flavors['mode'] ?: 'mode'
+        def abi = flavors['abi'] ?: 'abi'
+        variant.outputs.each { output ->
+            output.outputFileName.set("${mode}-${abi}.apk")
+        }
+    }
 }
+
 dependencies {
-    api fileTree(dir: "libs", include: ["*.jar","*.aar"])
-
-    implementation 'org.nanohttpd:nanohttpd:2.3.1'
-    implementation 'com.google.zxing:core:3.3.0'
-    implementation 'androidx.appcompat:appcompat:1.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
-//    implementation files('libs/thunder.jar')
-//    implementation files('libs/commons-lang3-3.12.0.jar')
-
-
-    implementation 'com.squareup.okhttp3:okhttp:3.12.11'
-    annotationProcessor 'androidx.room:room-compiler:2.3.0'
-    implementation 'androidx.room:room-runtime:2.3.0'
-    implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'com.squareup.okio:okio:2.8.0'
-    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.45-androidx'
-    implementation 'com.kingja.loadsir:loadsir:1.3.8'
-    implementation 'com.google.code.gson:gson:2.10.1'
-    implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'me.jessyan:autosize:1.2.1'
-    implementation('com.thoughtworks.xstream:xstream:1.4.15') {
-        exclude group: 'xmlpull', module: 'xmlpull'
-    }
-    implementation 'org.greenrobot:eventbus:3.2.0'
-    implementation 'com.orhanobut:hawk:2.0.1'
-    implementation 'com.github.ctiao:DanmakuFlameMaster:0.9.25'
-
-    implementation project(":player")
-    implementation project(":quickjs")
-    pythonImplementation project(":pyramid")
-    python32Implementation project(":pyramid")
-    python64Implementation project(":pyramid")
-
-
-    implementation 'com.lzy.net:okgo:3.0.4'
-    // implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
-    implementation 'com.owen:tv-recyclerview:3.0.0'
-
-    implementation 'com.github.getActivity:XXPermissions:13.6'
-    implementation 'org.jsoup:jsoup:1.14.1'
-    implementation 'com.github.hedzr:android-file-chooser:v1.2.0-final'
-    implementation 'commons-io:commons-io:2.11.0'
-    implementation 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
-    //支持http3
-    implementation ('com.google.net.cronet:cronet-okhttp:0.1.0')
-//    implementation 'com.google.android.gms:play-services-cronet:18.0.1'
-    implementation ('org.chromium.net:cronet-embedded:101.4951.41')
-    implementation 'org.brotli:dec:0.1.2'
+    implementation fileTree(dir: "libs", include: ["*.aar"])
+    implementation project(':catvod')
+    implementation project(':chaquo')
+    implementation project(':quickjs')
+    implementation libs.appcompat
+    implementation libs.lifecycle.service
+    implementation libs.media
+    implementation libs.palette
+    implementation libs.recyclerview
+    implementation libs.room.runtime
+    implementation libs.splashscreen
+    implementation libs.swiperefreshlayout
+    implementation libs.viewpager2
+    implementation libs.android.gif.drawable
+    implementation libs.bundles.glide
+    implementation libs.bundles.jupnp
+    implementation libs.customactivityoncrash
+    implementation libs.eventbus
+    implementation libs.flexbox
+    implementation libs.rtmp.client
+    implementation libs.lottie
+    implementation libs.material
+    implementation libs.materialdesigncolors
+    implementation libs.nanohttpd
+    implementation libs.newpipeextractor
+    implementation libs.permissionx
+    implementation libs.simple.xml
+    implementation libs.textdrawable
+    leanbackImplementation libs.leanback
+    leanbackImplementation libs.androidautosize
+    mobileImplementation libs.biometric
+    mobileImplementation libs.zxing.android.embedded
+    annotationProcessor libs.room.compiler
+    annotationProcessor libs.eventbus.annotation.processor
+    annotationProcessor libs.glide.compiler
+    coreLibraryDesugaring libs.desugar
 }
-

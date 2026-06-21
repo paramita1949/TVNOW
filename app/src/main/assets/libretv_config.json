@@ -7,8 +7,7 @@
       "api": "https://91md.me/api.php/provide/vod",
       "searchable": 1,
       "quickSearch": 1,
-      "filterable": 1,
-      "playerType": -1
+      "changeable": 1
     },
     {
       "key": "gdlsp",
@@ -17,8 +16,7 @@
       "api": "https://www.gdlsp.com/api/xml.php",
       "searchable": 1,
       "quickSearch": 1,
-      "filterable": 1,
-      "playerType": -1
+      "changeable": 1
     },
     {
       "key": "xrbsp",
@@ -27,8 +25,7 @@
       "api": "https://www.xrbsp.com/api/xml.php",
       "searchable": 1,
       "quickSearch": 1,
-      "filterable": 1,
-      "playerType": -1
+      "changeable": 1
     },
     {
       "key": "msnii",
@@ -37,8 +34,7 @@
       "api": "https://www.msnii.com/api/xml.php",
       "searchable": 1,
       "quickSearch": 1,
-      "filterable": 1,
-      "playerType": -1
+      "changeable": 1
     },
     {
       "key": "kxgav",
@@ -47,8 +43,7 @@
       "api": "https://www.kxgav.com/api/xml.php",
       "searchable": 1,
       "quickSearch": 1,
-      "filterable": 1,
-      "playerType": -1
+      "changeable": 1
     },
     {
       "key": "pgxdy",
@@ -57,8 +52,7 @@
       "api": "https://www.pgxdy.com/api/xml.php",
       "searchable": 1,
       "quickSearch": 1,
-      "filterable": 1,
-      "playerType": -1
+      "changeable": 1
     },
     {
       "key": "lebo",
@@ -67,28 +61,25 @@
       "api": "https://lbapi9.com/api.php/provide/vod",
       "searchable": 1,
       "quickSearch": 1,
-      "filterable": 1,
-      "playerType": -1
+      "changeable": 1
     },
     {
       "key": "lsbzy",
       "name": "老色A",
       "type": 1,
-      "api": "https://apiyutu.com/api.php/providedao/vod/",
+      "api": "https://apiyutu.com/api.php/providedao/vod",
       "searchable": 1,
       "quickSearch": 1,
-      "filterable": 1,
-      "playerType": -1
+      "changeable": 1
     },
     {
       "key": "laosb",
       "name": "玉兔A",
       "type": 1,
-      "api": "https://apiyutu.com/api.php/providedao/vod/",
+      "api": "https://apiyutu.com/api.php/providedao/vod",
       "searchable": 1,
       "quickSearch": 1,
-      "filterable": 1,
-      "playerType": -1
+      "changeable": 1
     },
     {
       "key": "aosika",
@@ -97,18 +88,16 @@
       "api": "https://aosikazy.com/api.php/provide/vod",
       "searchable": 1,
       "quickSearch": 1,
-      "filterable": 1,
-      "playerType": -1
+      "changeable": 1
     },
     {
       "key": "taohua",
       "name": "桃花资源A",
       "type": 1,
-      "api": "https://thzy1.me/api.php/provide/vod/",
+      "api": "https://thzy1.me/api.php/provide/vod",
       "searchable": 1,
       "quickSearch": 1,
-      "filterable": 1,
-      "playerType": -1
+      "changeable": 1
     },
     {
       "key": "wolong",
@@ -117,8 +106,7 @@
       "api": "https://collect.wolongzy.cc/api.php/provide/vod",
       "searchable": 1,
       "quickSearch": 1,
-      "filterable": 1,
-      "playerType": -1
+      "changeable": 1
     },
     {
       "key": "zy360",
@@ -127,8 +115,7 @@
       "api": "https://360zyzz.com/api.php/provide/vod",
       "searchable": 1,
       "quickSearch": 1,
-      "filterable": 1,
-      "playerType": -1
+      "changeable": 1
     },
     {
       "key": "jinying",
@@ -137,8 +124,7 @@
       "api": "https://jyzyapi.com/provide/vod/from/jinyingm3u8/at/json",
       "searchable": 1,
       "quickSearch": 1,
-      "filterable": 1,
-      "playerType": -1
+      "changeable": 1
     },
     {
       "key": "guangsu",
@@ -147,8 +133,7 @@
       "api": "https://api.guangsuapi.com/api.php/provide/vod/from/gsm3u8/at/xml",
       "searchable": 1,
       "quickSearch": 1,
-      "filterable": 1,
-      "playerType": -1
+      "changeable": 1
     }
   ]
 }
