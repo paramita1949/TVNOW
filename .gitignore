@@ -4,6 +4,7 @@
 .settings
 *build
 *.jks
+!keystore/tvnow-release.jks
 *.properties
 lib-*.aar
 /Release
