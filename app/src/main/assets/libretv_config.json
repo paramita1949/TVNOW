@@ -1,0 +1,154 @@
+{
+  "sites": [
+    {
+      "key": "qiqi",
+      "name": "麻豆A",
+      "type": 1,
+      "api": "https://91md.me/api.php/provide/vod",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "playerType": -1
+    },
+    {
+      "key": "gdlsp",
+      "name": "香奈儿A",
+      "type": 0,
+      "api": "https://www.gdlsp.com/api/xml.php",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "playerType": -1
+    },
+    {
+      "key": "xrbsp",
+      "name": "饮水机A",
+      "type": 0,
+      "api": "https://www.xrbsp.com/api/xml.php",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "playerType": -1
+    },
+    {
+      "key": "msnii",
+      "name": "蜜桃A",
+      "type": 0,
+      "api": "https://www.msnii.com/api/xml.php",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "playerType": -1
+    },
+    {
+      "key": "kxgav",
+      "name": "开心A",
+      "type": 0,
+      "api": "https://www.kxgav.com/api/xml.php",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "playerType": -1
+    },
+    {
+      "key": "pgxdy",
+      "name": "苹果A",
+      "type": 0,
+      "api": "https://www.pgxdy.com/api/xml.php",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "playerType": -1
+    },
+    {
+      "key": "lebo",
+      "name": "乐播A",
+      "type": 1,
+      "api": "https://lbapi9.com/api.php/provide/vod",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "playerType": -1
+    },
+    {
+      "key": "lsbzy",
+      "name": "老色A",
+      "type": 1,
+      "api": "https://apiyutu.com/api.php/providedao/vod/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "playerType": -1
+    },
+    {
+      "key": "laosb",
+      "name": "玉兔A",
+      "type": 1,
+      "api": "https://apiyutu.com/api.php/providedao/vod/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "playerType": -1
+    },
+    {
+      "key": "aosika",
+      "name": "奥斯卡A",
+      "type": 1,
+      "api": "https://aosikazy.com/api.php/provide/vod",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "playerType": -1
+    },
+    {
+      "key": "taohua",
+      "name": "桃花资源A",
+      "type": 1,
+      "api": "https://thzy1.me/api.php/provide/vod/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "playerType": -1
+    },
+    {
+      "key": "wolong",
+      "name": "卧龙资源",
+      "type": 1,
+      "api": "https://collect.wolongzy.cc/api.php/provide/vod",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "playerType": -1
+    },
+    {
+      "key": "zy360",
+      "name": "360资源",
+      "type": 1,
+      "api": "https://360zyzz.com/api.php/provide/vod",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "playerType": -1
+    },
+    {
+      "key": "jinying",
+      "name": "金鹰资源",
+      "type": 1,
+      "api": "https://jyzyapi.com/provide/vod/from/jinyingm3u8/at/json",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "playerType": -1
+    },
+    {
+      "key": "guangsu",
+      "name": "光速资源",
+      "type": 0,
+      "api": "https://api.guangsuapi.com/api.php/provide/vod/from/gsm3u8/at/xml",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "playerType": -1
+    }
+  ]
+}

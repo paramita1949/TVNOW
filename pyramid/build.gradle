@@ -15,7 +15,7 @@ android {
             abiFilters "armeabi-v7a", "arm64-v8a"
         }
         python {
-            buildPython("D:/Programs/Python/Python38/python.exe")
+            buildPython(System.getenv("CHAQUOPY_BUILD_PYTHON") ?: "D:/Programs/Python/Python38/python.exe")
             pip {
                 install "lxml"
                 install "ujson"

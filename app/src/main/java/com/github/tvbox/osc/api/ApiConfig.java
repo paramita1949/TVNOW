@@ -251,6 +251,18 @@ public class ApiConfig {
             callback.error("-1");
             return;
         }
+        if (apiUrl.startsWith("assets://")) {
+            try {
+                String json = readAssetConfig(apiUrl.substring("assets://".length()));
+                clearApiLinesIfUnmatched(apiUrl);
+                parseJson(apiUrl, json);
+                callback.success();
+            } catch (Throwable th) {
+                th.printStackTrace();
+                callback.error("读取内置配置失败");
+            }
+            return;
+        }
         File cache = new File(App.getInstance().getFilesDir().getAbsolutePath() + "/" + MD5.encode(apiUrl));
         if (useCache && cache.exists()) {
             try {
@@ -446,6 +458,17 @@ public class ApiConfig {
         String s = "";
         while ((s = bReader.readLine()) != null) {
             sb.append(s + "\n");
+        }
+        bReader.close();
+        return sb.toString();
+    }
+
+    private String readAssetConfig(String assetPath) throws Throwable {
+        BufferedReader bReader = new BufferedReader(new InputStreamReader(App.getInstance().getAssets().open(assetPath), "UTF-8"));
+        StringBuilder sb = new StringBuilder();
+        String s = "";
+        while ((s = bReader.readLine()) != null) {
+            sb.append(s).append("\n");
         }
         bReader.close();
         return sb.toString();
