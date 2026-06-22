@@ -2,12 +2,12 @@
 
 This repository is the active Android app project. Work in this folder only:
 
-- Project path: `D:\img\flutter\tvshow\TVNOW`
+- Project path: `D:\img\flutter\tvshow`
 - GitHub repo: `https://github.com/paramita1949/TVNOW.git`
 - Main branch: `main`
 - Base app: FongMi/TV Android app, adjusted for mobile use
 
-Do not use or recreate the old `FongMi-TV-src` folder. It was a temporary source folder and has been removed.
+Do not use or recreate the old `TVNOW` or `FongMi-TV-src` folders. The app source now lives directly in the `tvshow` root folder.
 
 ## Required Skills and Preflight
 
@@ -72,7 +72,7 @@ The GitHub workflow currently builds the mobile ARM64 release variant and publis
 
 ## Working Rules
 
-- Keep edits scoped to `TVNOW`; do not push to FongMi upstream.
+- Keep edits scoped to `D:\img\flutter\tvshow`; do not push to FongMi upstream.
 - Do not revert user changes unless explicitly requested.
 - Prefer small commits with clear messages.
 - Before saying work is complete, run fresh verification such as:
@@ -84,4 +84,3 @@ git diff --check
 ```
 
 For code or build changes, also run the smallest relevant Gradle build/test command that proves the change.
-

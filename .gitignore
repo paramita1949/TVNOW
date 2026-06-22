@@ -2,6 +2,8 @@
 .vscode
 .gradle
 .settings
+.codegraph/
+.learnings/
 *build
 *.jks
 !keystore/tvnow-release.jks
