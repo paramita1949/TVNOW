@@ -1,51 +1,6 @@
 {
   "sites": [
     {
-      "key": "qist_miss",
-      "name": "MissAV-CSP",
-      "type": 3,
-      "api": "csp_Miss",
-      "jar": "https://raw.githubusercontent.com/qist/tvbox/master/jar/pg.jar;md5;dffec63fb83a2b31b8606bd4bf6bead9",
-      "searchable": 1,
-      "quickSearch": 1,
-      "changeable": 1,
-      "timeout": 60
-    },
-    {
-      "key": "qist_doll",
-      "name": "Doll-CSP",
-      "type": 3,
-      "api": "csp_Doll",
-      "jar": "https://raw.githubusercontent.com/qist/tvbox/master/jar/pg.jar;md5;dffec63fb83a2b31b8606bd4bf6bead9",
-      "searchable": 1,
-      "quickSearch": 1,
-      "changeable": 1,
-      "timeout": 60
-    },
-    {
-      "key": "qist_xojav",
-      "name": "XOJav-CSP",
-      "type": 3,
-      "api": "csp_Xojav",
-      "jar": "https://raw.githubusercontent.com/qist/tvbox/master/jar/pg.jar;md5;dffec63fb83a2b31b8606bd4bf6bead9",
-      "ext": "null$$$proxy",
-      "searchable": 1,
-      "quickSearch": 1,
-      "changeable": 1,
-      "timeout": 60
-    },
-    {
-      "key": "qist_netflav",
-      "name": "Netflav-CSP",
-      "type": 3,
-      "api": "csp_Netflav",
-      "jar": "https://raw.githubusercontent.com/qist/tvbox/master/jar/pg.jar;md5;dffec63fb83a2b31b8606bd4bf6bead9",
-      "searchable": 1,
-      "quickSearch": 1,
-      "changeable": 1,
-      "timeout": 60
-    },
-    {
       "key": "qiqi",
       "name": "麻豆A",
       "type": 1,
