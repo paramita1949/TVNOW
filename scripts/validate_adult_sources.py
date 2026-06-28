@@ -31,15 +31,7 @@ JAR_MAGIC = (b"PK\x03\x04", b"dex\n")
 # These are probed for reachability but are not treated as playback-proven unless
 # a runnable Spider path yields a media URL in a future verifier.
 NON_CMS_CANDIDATES: list[dict[str, str]] = [
-    {"key": "supjav_sp", "name": "SupjavA", "type": 3, "api": "csp_Supjav", "jar": "assets://jar/adult_r18_javdb.jar"},
-    {"key": "eighteen_sp", "name": "18AVA", "type": 3, "api": "csp_Eighteen", "jar": "assets://jar/adult_r18_javdb.jar"},
-    {"key": "missav_sp", "name": "MissAVA", "type": 3, "api": "csp_Miss", "jar": "assets://jar/adult_r18_javdb.jar"},
-    {"key": "hanime_sp", "name": "HanimeA", "type": 3, "api": "csp_Hanime", "jar": "assets://jar/adult_r18_javdb.jar"},
     {"key": "jable_sp", "name": "JableA", "type": 3, "api": "csp_Jable", "jar": "assets://jar/adult_r18_javdb.jar"},
-    {"key": "javdb_sp", "name": "JavDbA", "type": 3, "api": "csp_JavDb", "jar": "assets://jar/adult_r18_javdb.jar"},
-    {"key": "huangcangku_xbpq", "name": "黄仓库A", "type": 3, "api": "csp_XBPQ", "jar": "assets://jar/adult_xbpq.jar", "ext": "assets://xbpq/huangcangku.json"},
-    {"key": "madou_yinghua_xbpq", "name": "麻豆映画A", "type": 3, "api": "csp_XBPQ", "jar": "assets://jar/adult_xbpq.jar", "ext": "assets://xbpq/madou_yinghua.json"},
-    {"key": "sehuatang_xbpq", "name": "色花堂A", "type": 3, "api": "csp_XBPQ", "jar": "assets://jar/adult_xbpq.jar", "ext": "assets://xbpq/sehuatang.json"},
 ]
 
 

@@ -58,7 +58,7 @@ $env:Path="$env:JAVA_HOME\bin;C:\Users\Administrator\AppData\Local\Programs\Pyth
 Release build command, only when the user explicitly asks for a local release APK/build, or when diagnosing a release-only build failure:
 
 ```powershell
-.\gradlew.bat :app:assembleMobileArm64_v8aRelease "-PciVersionCode=555998" "-PciVersionName=5.5.5.sources" --stacktrace
+.\gradlew.bat :app:assembleMobileArm64_v8aRelease "-PciVersionCode=556998" "-PciVersionName=5.5.6.sources" --stacktrace
 ```
 
 The GitHub workflow currently builds the mobile ARM64 release variant and publishes it to GitHub Releases.

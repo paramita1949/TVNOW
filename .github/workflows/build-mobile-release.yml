@@ -10,8 +10,8 @@ permissions:
   contents: write
 
 env:
-  BASE_VERSION_CODE: 555
-  BASE_VERSION_NAME: 5.5.5
+  BASE_VERSION_CODE: 556
+  BASE_VERSION_NAME: 5.5.6
 
 jobs:
   build:
