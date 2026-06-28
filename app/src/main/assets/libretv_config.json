@@ -1,6 +1,15 @@
 {
   "sites": [
     {
+      "key": "ttp231",
+      "name": "偷偷啪A",
+      "type": 3,
+      "api": "assets://js/ttp231.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1
+    },
+    {
       "key": "xgs",
       "name": "西瓜",
       "type": 3,
@@ -289,6 +298,108 @@
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 1
+    },
+    {
+      "key": "supjav_sp",
+      "name": "SupjavA",
+      "type": 3,
+      "api": "csp_Supjav",
+      "jar": "assets://jar/adult_r18_javdb.jar",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "timeout": 20
+    },
+    {
+      "key": "eighteen_sp",
+      "name": "18AVA",
+      "type": 3,
+      "api": "csp_Eighteen",
+      "jar": "assets://jar/adult_r18_javdb.jar",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "timeout": 20
+    },
+    {
+      "key": "missav_sp",
+      "name": "MissAVA",
+      "type": 3,
+      "api": "csp_Miss",
+      "jar": "assets://jar/adult_r18_javdb.jar",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "timeout": 20
+    },
+    {
+      "key": "hanime_sp",
+      "name": "HanimeA",
+      "type": 3,
+      "api": "csp_Hanime",
+      "jar": "assets://jar/adult_r18_javdb.jar",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "timeout": 20
+    },
+    {
+      "key": "jable_sp",
+      "name": "JableA",
+      "type": 3,
+      "api": "csp_Jable",
+      "jar": "assets://jar/adult_r18_javdb.jar",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "timeout": 20
+    },
+    {
+      "key": "javdb_sp",
+      "name": "JavDbA",
+      "type": 3,
+      "api": "csp_JavDb",
+      "jar": "assets://jar/adult_r18_javdb.jar",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "timeout": 20
+    },
+    {
+      "key": "huangcangku_xbpq",
+      "name": "黄仓库A",
+      "type": 3,
+      "api": "csp_XBPQ",
+      "jar": "assets://jar/adult_xbpq.jar",
+      "ext": "assets://xbpq/huangcangku.json",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "timeout": 20
+    },
+    {
+      "key": "madou_yinghua_xbpq",
+      "name": "麻豆映画A",
+      "type": 3,
+      "api": "csp_XBPQ",
+      "jar": "assets://jar/adult_xbpq.jar",
+      "ext": "assets://xbpq/madou_yinghua.json",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "timeout": 20
+    },
+    {
+      "key": "sehuatang_xbpq",
+      "name": "色花堂A",
+      "type": 3,
+      "api": "csp_XBPQ",
+      "jar": "assets://jar/adult_xbpq.jar",
+      "ext": "assets://xbpq/sehuatang.json",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "timeout": 20
     }
   ]
 }
