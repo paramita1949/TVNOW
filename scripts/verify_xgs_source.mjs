@@ -26,7 +26,7 @@ for (const name of ['init', 'home', 'homeVod', 'category', 'detail', 'play', 'se
   assert.equal(typeof spider.default?.[name], 'function', `Missing default.${name}`);
 }
 
-for (const name of ['buildGateClick', 'extractVideoItems', 'extractVideoDetail', 'normalizeUrl', 'htmlDecode']) {
+for (const name of ['buildGateClick', 'extractVideoItems', 'extractVideoDetail', 'normalizeUrl', 'htmlDecode', 'decodeChallengeHtml', 'buildCookieHeader', 'fetchResolvedHtml']) {
   assert.equal(typeof spider[name], 'function', `Missing export ${name}`);
 }
 
@@ -70,5 +70,42 @@ assert.equal(detail.vod_name, 'PAP-158 中高年世代へ捧げる昭和官能�
 assert.equal(detail.type_name, '有码视频');
 assert.equal(detail.vod_play_from, '西瓜');
 assert.equal(detail.vod_play_url, '播放$https://xgs262.shop/video/384764.html');
+
+const challengeCookie = spider.buildCookieHeader(
+  {
+    'set-cookie': [
+      'Challenge=abc123; expires=Sun, 28-Jun-2026 10:34:33 GMT; Max-Age=3600; path=/',
+      'Expires=1782642873; expires=Sun, 28-Jun-2026 10:34:33 GMT; Max-Age=3600; path=/',
+      'Signature=deadbeef; expires=Sun, 28-Jun-2026 10:34:33 GMT; Max-Age=3600; path=/',
+    ],
+  },
+  "<script>$.cookie('UID_abc123','ok',{expires:1,path:'/'});</script>"
+);
+assert.equal(challengeCookie, 'Challenge=abc123; Expires=1782642873; Signature=deadbeef; UID_abc123=ok');
+
+const previousReq = globalThis.req;
+let calls = 0;
+globalThis.req = (url, options) => {
+  calls += 1;
+  if (calls === 1) {
+    assert.equal(options.headers.Cookie, undefined);
+    return {
+      headers: {
+        'set-cookie': [
+          'Challenge=abc123; expires=Sun, 28-Jun-2026 10:34:33 GMT; Max-Age=3600; path=/',
+          'Expires=1782642873; expires=Sun, 28-Jun-2026 10:34:33 GMT; Max-Age=3600; path=/',
+          'Signature=deadbeef; expires=Sun, 28-Jun-2026 10:34:33 GMT; Max-Age=3600; path=/',
+        ],
+      },
+      content: "<script>$.cookie('UID_abc123','ok',{expires:1,path:'/'});</script>",
+    };
+  }
+  assert.equal(options.headers.Cookie, 'Challenge=abc123; Expires=1782642873; Signature=deadbeef; UID_abc123=ok');
+  return { headers: {}, content: listHtml };
+};
+const resolvedHtml = spider.fetchResolvedHtml('https://xgs262.shop/');
+assert.equal(calls, 2);
+assert.equal(spider.extractVideoItems(resolvedHtml).length, 2);
+globalThis.req = previousReq;
 
 console.log('XGS source verification passed');

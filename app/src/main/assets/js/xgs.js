@@ -1,3 +1,5 @@
+import * as CryptoJSImport from './lib/crypto-js.js';
+
 export const BASE = 'https://xgs262.shop';
 export const SOURCE = '西瓜';
 export const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149 Safari/537.36';
@@ -20,6 +22,7 @@ const SEED_VODS = [
   },
 ];
 const SEED_BY_ID = Object.fromEntries(SEED_VODS.map((item) => [item.vod_id, item]));
+let SESSION_COOKIE = '';
 
 export function buildGateClick() {
   return "document.querySelector('#checkbox')?.click();document.querySelector('#Link')?.click();";
@@ -65,22 +68,99 @@ function responseContent(res) {
   return '';
 }
 
-function request(url, referer) {
+function responseHeaders(res) {
+  if (!res || !res.headers) return {};
+  return res.headers;
+}
+
+function headerValue(headers, name) {
+  if (!headers) return '';
+  const direct = headers[name] || headers[name.toLowerCase()] || headers[name.toUpperCase()];
+  if (direct) return direct;
+  const target = name.toLowerCase();
+  for (const key of Object.keys(headers)) if (key.toLowerCase() === target) return headers[key];
+  return '';
+}
+
+function splitSetCookie(value) {
+  if (!value) return [];
+  if (Array.isArray(value)) return value;
+  return String(value).split(/,\s*(?=[^;,]+=)/).filter(Boolean);
+}
+
+function mergeCookie(cookie, name, value) {
+  if (!name || value == null) return cookie || '';
+  const map = {};
+  for (const part of String(cookie || '').split(/;\s*/).filter(Boolean)) {
+    const index = part.indexOf('=');
+    if (index > 0) map[part.slice(0, index)] = part.slice(index + 1);
+  }
+  map[name] = value;
+  return Object.keys(map).map((key) => `${key}=${map[key]}`).join('; ');
+}
+
+export function buildCookieHeader(headers, html, existing = '') {
+  let cookie = existing || '';
+  for (const item of splitSetCookie(headerValue(headers, 'set-cookie'))) {
+    const pair = String(item).split(';')[0];
+    const index = pair.indexOf('=');
+    if (index > 0) cookie = mergeCookie(cookie, pair.slice(0, index), pair.slice(index + 1));
+  }
+  const uid = firstMatch(html, /\$\.cookie\('([^']+)'\s*,\s*'ok'/);
+  if (uid) cookie = mergeCookie(cookie, uid, 'ok');
+  const challenge = firstMatch(cookie, /(?:^|;\s*)Challenge=([^;]+)/);
+  if (challenge) cookie = mergeCookie(cookie, `UID_${challenge}`, 'ok');
+  return cookie;
+}
+
+function base64ToLatin1(text) {
+  const crypto = globalThis.CryptoJS || CryptoJSImport.default || CryptoJSImport;
+  if (!crypto) return '';
+  return crypto.enc.Latin1.stringify(crypto.enc.Base64.parse(text));
+}
+
+export function decodeChallengeHtml(html) {
+  const crypto = globalThis.CryptoJS || CryptoJSImport.default || CryptoJSImport;
+  if (!crypto || !html || !html.includes('subtle') || !html.includes('decrypt')) return html || '';
+  const data = firstMatch(html, /var\s+[A-Za-z_$][\w$]*\s*=\s*"([^"]{1000,})"/);
+  const arrayBody = firstMatch(html, /,\s*[A-Za-z_$][\w$]*\s*=\s*\[((?:"[^"]+"\s*,?\s*)+)\]/);
+  if (!data || !arrayBody) return html;
+  try {
+    const keyB64 = [...arrayBody.matchAll(/"([^"]+)"/g)].map((match) => base64ToLatin1(match[1])).join('');
+    const key = base64ToLatin1(keyB64);
+    const payload = base64ToLatin1(data.split('').reverse().join(''));
+    const iv = payload.slice(0, 16);
+    const ciphertext = payload.slice(16);
+    const decrypted = crypto.AES.decrypt(
+      { ciphertext: crypto.enc.Latin1.parse(ciphertext) },
+      crypto.enc.Latin1.parse(key),
+      { iv: crypto.enc.Latin1.parse(iv), mode: crypto.mode.CTR, padding: crypto.pad.NoPadding }
+    );
+    const text = crypto.enc.Utf8.stringify(decrypted);
+    return text || html;
+  } catch (e) {
+    return html;
+  }
+}
+
+function request(url, referer, cookie) {
   const http = typeof req === 'function' ? req : globalThis.req;
   if (typeof http !== 'function') return '';
   const target = normalizeUrl(url);
   try {
+    const headers = {
+      'User-Agent': UA,
+      Referer: referer || BASE + '/',
+      Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    };
+    if (cookie) headers.Cookie = cookie;
     const res = http(target, {
       timeout: 20000,
-      headers: {
-        'User-Agent': UA,
-        Referer: referer || BASE + '/',
-        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-      },
+      headers,
     });
-    return responseContent(res);
+    return { html: responseContent(res), headers: responseHeaders(res) };
   } catch (e) {
-    return '';
+    return { html: '', headers: {} };
   }
 }
 
@@ -185,8 +265,25 @@ function searchUrl(key, page) {
   return pg === '1' ? BASE + path : `${BASE}${path}/${pg}.html`;
 }
 
+export function fetchResolvedHtml(url, referer = BASE + '/') {
+  let cookie = SESSION_COOKIE;
+  let html = '';
+  for (let i = 0; i < 3; i++) {
+    const res = request(url, referer, cookie);
+    html = decodeChallengeHtml(res.html);
+    const nextCookie = buildCookieHeader(res.headers, html, cookie);
+    if (nextCookie && nextCookie !== cookie) {
+      cookie = nextCookie;
+      SESSION_COOKIE = cookie;
+      if (!extractVideoItems(html).length && html.includes('$.cookie')) continue;
+    }
+    if (html && !html.includes('subtle')) break;
+  }
+  return html;
+}
+
 function listFromUrl(url) {
-  const html = request(url, BASE + '/');
+  const html = fetchResolvedHtml(url, BASE + '/');
   return extractVideoItems(html);
 }
 
@@ -205,7 +302,7 @@ const spider = {
   },
   detail(id) {
     const url = pageUrl(id);
-    const html = request(url, url);
+    const html = fetchResolvedHtml(url, url);
     const vod = extractVideoDetail(html, videoIdFromUrl(url) || id);
     return toJson({ list: [vod] });
   },
