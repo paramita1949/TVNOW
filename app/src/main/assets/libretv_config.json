@@ -1,6 +1,17 @@
 {
   "sites": [
     {
+      "key": "xgs",
+      "name": "西瓜",
+      "type": 3,
+      "api": "assets://js/xgs.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "timeout": 20,
+      "click": "document.querySelector('#checkbox')?.click();document.querySelector('#Link')?.click();"
+    },
+    {
       "key": "qiqi",
       "name": "麻豆A",
       "type": 1,
