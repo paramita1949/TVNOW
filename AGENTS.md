@@ -55,10 +55,10 @@ $env:JAVA_HOME='C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot'
 $env:Path="$env:JAVA_HOME\bin;C:\Users\Administrator\AppData\Local\Programs\Python\Python310;C:\Users\Administrator\AppData\Local\Programs\Python\Python310\Scripts;$env:ANDROID_HOME\platform-tools;$env:ANDROID_HOME\cmdline-tools\latest\bin;$env:Path"
 ```
 
-Release build command used for local verification:
+Release build command, only when the user explicitly asks for a local release APK/build, or when diagnosing a release-only build failure:
 
 ```powershell
-.\gradlew.bat :app:assembleMobileArm64_v8aRelease "-PciVersionCode=552998" "-PciVersionName=5.5.2.sources" --stacktrace
+.\gradlew.bat :app:assembleMobileArm64_v8aRelease "-PciVersionCode=553998" "-PciVersionName=5.5.3.sources" --stacktrace
 ```
 
 The GitHub workflow currently builds the mobile ARM64 release variant and publishes it to GitHub Releases.
@@ -75,6 +75,7 @@ The GitHub workflow currently builds the mobile ARM64 release variant and publis
 - Keep edits scoped to `D:\img\flutter\tvshow`; do not push to FongMi upstream.
 - Do not revert user changes unless explicitly requested.
 - Prefer small commits with clear messages.
+- Do not run local Android release builds by default because they are slow and waste time. For routine version bumps, source config changes, or push-to-GitHub requests, rely on lightweight verification (`codegraph status`, JSON parsing, `git diff --check`, `git status`) and let GitHub Actions perform the release APK build. Run `:app:assembleMobileArm64_v8aRelease` locally only when the user explicitly asks for a local build/APK, when CI/release build failures are being debugged, or when the change cannot be reasonably verified without a release build.
 - Before saying work is complete, run fresh verification such as:
 
 ```powershell
@@ -83,4 +84,4 @@ git status --short --branch
 git diff --check
 ```
 
-For code or build changes, also run the smallest relevant Gradle build/test command that proves the change.
+For code or build changes, run the smallest relevant quick Gradle build/test command only when it is necessary to prove the change; avoid local release builds unless covered by the rule above.
