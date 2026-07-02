@@ -3,7 +3,7 @@ export const SITE_ORIGIN = 'https://bbs.xfca2022.com';
 export const SOURCE = '2048快播';
 export const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36';
 
-export const CATEGORIES = [
+const CLIST_CATEGORIES = [
   { type_id: 'selfie', type_name: '网友自拍', list: 'list5', info: 'info5', param: 't', value: 'list' },
   { type_id: 'cg_daily', type_name: '每日吃瓜', list: 'list2', info: 'info2', param: 'p' },
   { type_id: 'wh_1', type_name: '网红爆料', list: 'list61', info: 'info61', param: 'p' },
@@ -54,6 +54,55 @@ export const CATEGORIES = [
   { type_id: 'av_platform', type_name: 'AV大平台', list: 'list77', info: 'info77', param: 't', value: 'dm265$cn$chinese-subtitle' },
 ];
 
+const DYNAMIC_CATEGORIES = [
+  { type_id: 'dyn_porn91', type_name: '91Porn', mode: 'path', path: 'list/Porn91/index.html' },
+  { type_id: 'dyn_avdb', type_name: 'AvDB', mode: 'path', path: 'list/AvDB/index.html' },
+  { type_id: 'dyn_av18', type_name: 'AV18', mode: 'path', path: 'list/AV18/index.html' },
+  { type_id: 'dyn_xvideos', type_name: 'Xvideos', mode: 'path', path: 'list/Xvideos/index.html' },
+  { type_id: 'dyn_hsck', type_name: '黄色淘宝', mode: 'path', path: 'list/Hsck/index.html' },
+  { type_id: 'dyn_xingba', type_name: '杏吧资源', mode: 'path', path: 'list/xingba/index.html' },
+  { type_id: 'dyn_naizi', type_name: '大奶资源', mode: 'path', path: 'list/naizi/index.html' },
+  { type_id: 'dyn_yutu', type_name: '玉兔资源', mode: 'path', path: 'list/yutu/index.html' },
+  { type_id: 'dyn_bp', type_name: '白嫖资源', mode: 'path', path: 'list/bp/index.html' },
+  { type_id: 'dyn_lj', type_name: '辣椒资源', mode: 'path', path: 'list/lj/index.html' },
+  { type_id: 'dyn_new2', type_name: '奶香资源', mode: 'path', path: 'list/new2/index.html' },
+  { type_id: 'dyn_new3', type_name: '森林资源', mode: 'path', path: 'list/new3/index.html' },
+  { type_id: 'dyn_msv', type_name: '少女资源', mode: 'path', path: 'list/msv/index.html' },
+  { type_id: 'dyn_ysj', type_name: '淫水资源', mode: 'path', path: 'list/ysj/index.html' },
+  { type_id: 'dyn_xne', type_name: '香奶资源', mode: 'path', path: 'list/xne/index.html' },
+  { type_id: 'dyn_hav', type_name: '黄片资源', mode: 'path', path: 'list/hav/index.html' },
+  { type_id: 'dyn_lb', type_name: '乐播资源', mode: 'path', path: 'list/lb/index.html' },
+  { type_id: 'dyn_fh', type_name: '番号资源', mode: 'path', path: 'list/fh/index.html' },
+  { type_id: 'dyn_jkun', type_name: 'Jkun资源', mode: 'path', path: 'list/jkun/index.html' },
+];
+
+const UNPLAYABLE_CLIST_CATEGORY_IDS = new Set([
+  'hxc',
+  'jiujiure',
+  'porntv',
+  'haosetv',
+  'aiwei',
+  'iqqtv',
+  'hot91',
+  'mise',
+  'dujia',
+  'wanpi',
+  'xingba_radio',
+  'bilibili',
+  'asia',
+  'myplay',
+  'xiaoou',
+  'rou_video',
+  'cg_3',
+  'cg_4',
+  'cg_5',
+  'wh_3',
+  'japan_av',
+  'av_daquan',
+]);
+
+export const CATEGORIES = CLIST_CATEGORIES.filter((item) => !UNPLAYABLE_CLIST_CATEGORY_IDS.has(item.type_id)).concat(DYNAMIC_CATEGORIES);
+
 const CACHE_BY_ID = {};
 let ACTIVE_BASE = API_BASES[0];
 
@@ -101,6 +150,8 @@ function stripHtml(text) {
 export function normalizeUrl(url) {
   const value = htmlDecode(url);
   if (!value) return '';
+  if (value.startsWith('//')) return `https:${value}`;
+  if (value.startsWith('/')) return `${apiRoot()}${value}`;
   try {
     return new URL(value).href;
   } catch (e) {
@@ -117,10 +168,20 @@ function apiRoot(base) {
   return (base || ACTIVE_BASE || API_BASES[0]).replace(/\/+$/, '');
 }
 
+function dynamicPathForPage(path, page) {
+  const value = safeText(path).replace(/^\/+/, '');
+  if (!value || page <= 1) return value;
+  if (/\.html(?:[?#].*)?$/i.test(value)) return value.replace(/\.html$/i, `/${page}.html`);
+  return `${value.replace(/\/+$/, '')}/${page}.html`;
+}
+
 export function buildListUrl(tid, pg, base) {
   const category = categoryById(tid);
   const page = safePage(pg);
   const root = apiRoot(base);
+  if (category.mode === 'path') {
+    return `${root}/forav/list?u=${encodeURIComponent(dynamicPathForPage(category.path, category.singlePage ? 1 : page))}`;
+  }
   if (category.param === 't') {
     return `${root}/forav/${category.list}?t=${encodeURIComponent(category.value || '')}&p=${page}`;
   }
@@ -129,6 +190,9 @@ export function buildListUrl(tid, pg, base) {
 
 export function buildInfoUrl(tid, id, base) {
   const category = categoryById(tid);
+  if (category.mode === 'path') {
+    return `${apiRoot(base)}/forav/info?id=${encodeURIComponent(safeText(id))}`;
+  }
   return `${apiRoot(base)}/forav/${category.info}?id=${encodeURIComponent(safeText(id))}`;
 }
 
@@ -222,28 +286,40 @@ export function parseListResponse(content, tid) {
 function parseDPlayerUrls(html) {
   const urls = [];
   const seen = {};
+  function addUrl(name, url) {
+    const normalized = normalizeUrl(url);
+    if (normalized && !seen[normalized]) {
+      urls.push({ name: safeText(name) || `线路${urls.length + 1}`, url: normalized });
+      seen[normalized] = true;
+    }
+  }
   for (const match of String(html || '').matchAll(/data-config=(["'])([\s\S]*?)\1/gi)) {
     try {
       const config = JSON.parse(htmlDecode(match[2]));
       const url = safeText(config && config.video && config.video.url);
-      if (url && !seen[url]) {
-        urls.push({ name: `线路${urls.length + 1}`, url: normalizeUrl(url) });
-        seen[url] = true;
-      }
+      addUrl(`线路${urls.length + 1}`, url);
     } catch (e) {
       // Ignore malformed ad/player config.
     }
   }
-  for (const match of String(html || '').matchAll(/https?:\/\/[^"'<>\\\s]+?\.(?:m3u8|mp4)(?:\?[^"'<>\\\s]*)?/gi)) {
-    const url = normalizeUrl(match[0]);
-    if (url && !seen[url]) {
-      urls.push({ name: `线路${urls.length + 1}`, url });
-      seen[url] = true;
+  for (const match of String(html || '').matchAll(/(?:playurls|rawSourceList)\s*=\s*(\[[\s\S]*?\])\s*;/gi)) {
+    try {
+      const playurls = JSON.parse(htmlDecode(match[1]));
+      if (Array.isArray(playurls)) {
+        for (const item of playurls) {
+          addUrl(item && (item.name || item.label), item && item.url);
+        }
+      }
+    } catch (e) {
+      // Ignore malformed player list config.
     }
   }
+  for (const match of String(html || '').matchAll(/https?:\/\/[^"'<>\\\s]+?\.(?:m3u8|mp4)(?:\?[^"'<>\\\s]*)?/gi)) {
+    addUrl(`线路${urls.length + 1}`, match[0]);
+  }
   const direct = safeText(html);
-  if (/^https?:\/\/.+\.(?:m3u8|mp4)(?:[?#].*)?$/i.test(direct) && !seen[direct]) {
-    urls.push({ name: `线路${urls.length + 1}`, url: normalizeUrl(direct) });
+  if (/^https?:\/\/.+\.(?:m3u8|mp4)(?:[?#].*)?$/i.test(direct)) {
+    addUrl(`线路${urls.length + 1}`, direct);
   }
   return urls;
 }
@@ -251,7 +327,7 @@ function parseDPlayerUrls(html) {
 export function parseDetailResponse(content, fallback = {}) {
   const data = parseJson(content);
   const base = compactRow(fallback || {});
-  const rawContent = safeText(data.content);
+  const rawContent = safeText(data.content || data.url || data.html);
   const playLinks = parseDPlayerUrls(rawContent);
   return compactRow(
     {
@@ -301,7 +377,9 @@ export function formatVodDetail(row, originalId) {
 function mapList(content, tid, page) {
   const data = parseJson(content);
   const rows = parseListResponse(content, tid);
-  const pagecount = Number(data.pagetotal) || (rows.length ? page + 1 : page);
+  const pageTextMatch = safeText(data.pagetext).match(/Pages\s+\d+\s*\/\s*(\d+)/i);
+  const category = categoryById(tid);
+  const pagecount = category.singlePage ? page : Number(data.pagetotal) || Number(pageTextMatch && pageTextMatch[1]) || (rows.length ? page + 1 : page);
   const limit = rows.length || 20;
   return toJson({
     page,
