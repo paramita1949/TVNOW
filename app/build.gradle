@@ -10,8 +10,8 @@ if (localPropsFile.exists()) {
     }
 }
 
-def baseVersionCode = 557
-def baseVersionName = "5.5.7"
+def baseVersionCode = 558
+def baseVersionName = "5.5.8"
 def appVersionCode = (findProperty("ciVersionCode") ?: baseVersionCode).toString().toInteger()
 def appVersionName = (findProperty("ciVersionName") ?: baseVersionName).toString()
 
