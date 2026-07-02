@@ -31,6 +31,16 @@
       "timeout": 20
     },
     {
+      "key": "xfca",
+      "name": "2048快播",
+      "type": 3,
+      "api": "assets://js/xfca.js",
+      "searchable": 0,
+      "quickSearch": 0,
+      "changeable": 1,
+      "timeout": 20
+    },
+    {
       "key": "ttp231",
       "name": "偷偷啪A",
       "type": 3,
