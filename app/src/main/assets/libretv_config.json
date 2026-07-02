@@ -1,6 +1,16 @@
 {
   "sites": [
     {
+      "key": "aida",
+      "name": "爱豆A",
+      "type": 3,
+      "api": "assets://js/aida.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "timeout": 20
+    },
+    {
       "key": "ttp231",
       "name": "偷偷啪A",
       "type": 3,
