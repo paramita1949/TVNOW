@@ -89,25 +89,30 @@ for (const name of [
 
 assert.equal(spider.SOURCE, '2048快播');
 assert.ok(spider.API_BASES.includes(API_BASE));
-assert.deepEqual(
-  spider.CATEGORIES.map((item) => [item.type_id, item.type_name]),
-  [
-    ['cg_daily', '每日吃瓜'],
-    ['selfie', '网友自拍'],
-    ['wh_1', '网红爆料1'],
-    ['wh_2', '网红爆料2'],
-    ['wh_vip', '网红精品'],
-  ]
-);
+const expectedCategoryNames = new Map([
+  ['selfie', '网友自拍'],
+  ['cg_daily', '每日吃瓜'],
+  ['xhs', '小黄书'],
+  ['xp', 'XP天堂'],
+  ['haijiao', '海角网'],
+  ['av_platform', 'AV大平台'],
+]);
+assert.ok(spider.CATEGORIES.length >= 48, 'should expose all currently verified XFCA clist categories');
+for (const [typeId, typeName] of expectedCategoryNames) {
+  assert.equal(spider.CATEGORIES.find((item) => item.type_id === typeId)?.type_name, typeName, `missing category ${typeId}`);
+}
 
 const home = JSON.parse(spider.default.home(false));
-assert.equal(home.class.length, 5);
-assert.deepEqual(home.class[4], { type_id: 'wh_vip', type_name: '网红精品' });
+assert.equal(home.class.length, spider.CATEGORIES.length);
+assert.ok(home.class.some((item) => item.type_id === 'xhs' && item.type_name === '小黄书'));
 
 assert.equal(spider.buildListUrl('cg_daily', 1, API_BASE), `${API_BASE}/forav/list2?p=1`);
 assert.equal(spider.buildListUrl('selfie', 2, API_BASE), `${API_BASE}/forav/list5?t=list&p=2`);
 assert.equal(spider.buildListUrl('wh_vip', 1, API_BASE), `${API_BASE}/forav/list75?p=1`);
 assert.equal(spider.buildInfoUrl('wh_vip', '34591', API_BASE), `${API_BASE}/forav/info75?id=34591`);
+assert.equal(spider.buildListUrl('xhs', 1, API_BASE), `${API_BASE}/forav/list41?p=1`);
+assert.equal(spider.buildInfoUrl('xhs', '10040', API_BASE), `${API_BASE}/forav/info41?id=10040`);
+assert.equal(spider.buildListUrl('av_platform', 1, API_BASE), `${API_BASE}/forav/list77?t=dm265%24cn%24chinese-subtitle&p=1`);
 
 const headers = {
   'User-Agent': spider.UA,
