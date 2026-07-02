@@ -100,15 +100,25 @@ const expectedCategoryNames = new Map([
   ['dyn_porn91', '91Porn'],
   ['dyn_jkun', 'Jkun资源'],
 ]);
-assert.ok(spider.CATEGORIES.length >= 45, 'should expose playable XFCA clist categories plus playable dynamic /list categories');
+assert.ok(spider.CATEGORIES.length >= 67, 'should expose the stable XFCA clist category list plus playable dynamic /list categories');
 for (const [typeId, typeName] of expectedCategoryNames) {
   assert.equal(spider.CATEGORIES.find((item) => item.type_id === typeId)?.type_name, typeName, `missing category ${typeId}`);
+}
+for (const [typeId, typeName] of [
+  ['hxc', '含羞草'],
+  ['porntv', 'porntv'],
+  ['haosetv', '好色TV'],
+  ['myplay', 'Myplay'],
+  ['av_daquan', 'AV大全'],
+]) {
+  assert.equal(spider.CATEGORIES.find((item) => item.type_id === typeId)?.type_name, typeName, `historical category should remain visible: ${typeId}`);
 }
 
 const home = JSON.parse(spider.default.home(false));
 assert.equal(home.class.length, spider.CATEGORIES.length);
 assert.ok(home.class.some((item) => item.type_id === 'xhs' && item.type_name === '小黄书'));
 assert.ok(home.class.some((item) => item.type_id === 'dyn_new3' && item.type_name === '森林资源'));
+assert.ok(home.class.some((item) => item.type_id === 'hxc' && item.type_name === '含羞草'));
 
 assert.equal(spider.buildListUrl('cg_daily', 1, API_BASE), `${API_BASE}/forav/list2?p=1`);
 assert.equal(spider.buildListUrl('selfie', 2, API_BASE), `${API_BASE}/forav/list5?t=list&p=2`);

@@ -76,32 +76,7 @@ const DYNAMIC_CATEGORIES = [
   { type_id: 'dyn_jkun', type_name: 'Jkun资源', mode: 'path', path: 'list/jkun/index.html' },
 ];
 
-const UNPLAYABLE_CLIST_CATEGORY_IDS = new Set([
-  'hxc',
-  'jiujiure',
-  'porntv',
-  'haosetv',
-  'aiwei',
-  'iqqtv',
-  'hot91',
-  'mise',
-  'dujia',
-  'wanpi',
-  'xingba_radio',
-  'bilibili',
-  'asia',
-  'myplay',
-  'xiaoou',
-  'rou_video',
-  'cg_3',
-  'cg_4',
-  'cg_5',
-  'wh_3',
-  'japan_av',
-  'av_daquan',
-]);
-
-export const CATEGORIES = CLIST_CATEGORIES.filter((item) => !UNPLAYABLE_CLIST_CATEGORY_IDS.has(item.type_id)).concat(DYNAMIC_CATEGORIES);
+export const CATEGORIES = CLIST_CATEGORIES.concat(DYNAMIC_CATEGORIES);
 
 const CACHE_BY_ID = {};
 let ACTIVE_BASE = API_BASES[0];
