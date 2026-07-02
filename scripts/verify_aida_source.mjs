@@ -66,7 +66,10 @@ for (const name of [
   'BASE',
   'CATEGORIES',
   'buildApiRequest',
+  'buildCategoryPayload',
+  'buildSearchPayload',
   'decodeApiResponse',
+  'decodeCoverBase64',
   'formatVodItem',
   'buildM3u8Url',
   'mapSearchResult',
@@ -78,6 +81,9 @@ assert.equal(spider.BASE, 'https://ww22.aida1.cyou');
 assert.deepEqual(
   spider.CATEGORIES.map((item) => [item.type_id, item.type_name]),
   [
+    ['label_new', '最新更新'],
+    ['label_hot', '热门事件'],
+    ['label_good', '视频精选'],
     ['1', '国产'],
     ['5', '传媒'],
     ['2', '日韩'],
@@ -88,8 +94,64 @@ assert.deepEqual(
 );
 
 const home = JSON.parse(spider.default.home(false));
-assert.equal(home.class.length, 6);
-assert.deepEqual(home.class[0], { type_id: '1', type_name: '国产' });
+assert.equal(home.class.length, 9);
+assert.deepEqual(home.class[0], { type_id: 'label_new', type_name: '最新更新' });
+
+assert.deepEqual(spider.buildCategoryPayload('label_new', 2), {
+  type: '',
+  by: 'vod_time',
+  order: 'desc',
+  page: 2,
+  size: 12,
+  count: 12,
+  tag: '',
+  keyword: '',
+  extypes: '6',
+});
+assert.deepEqual(spider.buildCategoryPayload('label_hot', 1), {
+  type: '',
+  by: 'vod_hits',
+  order: 'desc',
+  page: 1,
+  size: 12,
+  count: 12,
+  tag: '门|料|流出|伦理',
+  keyword: '',
+  extypes: '6',
+});
+assert.deepEqual(spider.buildCategoryPayload('label_good', 1), {
+  type: '',
+  by: 'vod_up',
+  order: 'desc',
+  page: 1,
+  size: 12,
+  count: 12,
+  tag: '',
+  keyword: '',
+  extypes: '6',
+});
+assert.deepEqual(spider.buildCategoryPayload('6', 1), {
+  type: '6',
+  by: 'vod_time',
+  order: 'desc',
+  page: 1,
+  size: 12,
+  count: 12,
+  tag: '',
+  keyword: '',
+  extypes: '',
+});
+assert.deepEqual(spider.buildSearchPayload('女', 3, true), {
+  type: '',
+  by: 'vod_time',
+  order: 'desc',
+  page: 3,
+  size: 12,
+  count: 12,
+  tag: '',
+  keyword: '女',
+  extypes: '6',
+});
 
 const sampleRow = {
   vodId: 67758,
@@ -111,6 +173,26 @@ assert.equal(
   'https://ww22.aida1.cyou/api/m3u8/dbdfbbe987f551e0b946962a70c677e8.m3u8?line=2'
 );
 
+const encryptedCover = await httpsRequest(sampleRow.vodPic, {
+  headers: { 'User-Agent': spider.UA, Referer: 'https://ww22.aida1.cyou/' },
+  timeout: 30000,
+});
+assert.equal(encryptedCover.code, 200);
+const decryptedCover = spider.decodeCoverBase64(encryptedCover.buffer.toString('base64'));
+assert.match(decryptedCover, /^data:image\/jpeg;base64,/);
+assert.deepEqual(Buffer.from(decryptedCover.split(',')[1], 'base64').subarray(0, 3), Buffer.from([0xff, 0xd8, 0xff]));
+
+globalThis.req = () => ({
+  code: 200,
+  content: encryptedCover.buffer.toString('base64'),
+  headers: {},
+});
+const itemWithDecodedCover = spider.formatVodItem(sampleRow);
+assert.match(itemWithDecodedCover.vod_pic, /^data:image\/jpeg;base64,/);
+globalThis.req = (url, options = {}) => {
+  throw new Error(`Synchronous req is not available in this Node verifier: ${url} ${JSON.stringify(options)}`);
+};
+
 const request = spider.buildApiRequest('/vod/info.php', { id: '67758' }, 1783000081834);
 assert.equal(request.url, 'https://ww22.aida1.cyou/awsapi/vod/info.php?md5=674153c027e39');
 assert.match(request.body, /^data=/);
@@ -126,7 +208,7 @@ const decoded = spider.decodeApiResponse(apiResponse.content, request.t);
 assert.equal(decoded.vodId, 67758);
 assert.equal(decoded.code, 'dbdfbbe987f551e0b946962a70c677e8');
 
-const categoryRequest = spider.buildApiRequest('/vod/search.php', { type: '1', by: 'vod_score', order: 'desc', page: 1, size: 8, count: 8 });
+const categoryRequest = spider.buildApiRequest('/vod/search.php', spider.buildCategoryPayload('label_new', 1));
 const categoryResponse = await httpsRequest(categoryRequest.url, {
   method: 'POST',
   body: categoryRequest.body,
@@ -141,6 +223,19 @@ const categoryJson = JSON.parse(spider.mapSearchResult({ code: 200, data: catego
 assert.ok(categoryJson.list.length > 0, 'mapped category should return at least one vod item');
 assert.match(categoryJson.list[0].vod_id, /^\d+$/);
 assert.ok(categoryJson.list[0].vod_name);
+assert.match(categoryJson.list[0].vod_pic, /^(data:image\/jpeg;base64,|https?:\/\/)/);
+
+const searchRequest = spider.buildApiRequest('/vod/search.php', spider.buildSearchPayload('女', 1, true));
+const searchResponse = await httpsRequest(searchRequest.url, {
+  method: 'POST',
+  body: searchRequest.body,
+  headers: searchRequest.headers,
+  timeout: 30000,
+});
+assert.equal(searchResponse.code, 200);
+const searchDecoded = spider.decodeApiResponse(searchResponse.content, searchRequest.t);
+assert.ok(Array.isArray(searchDecoded.rows), 'search rows should be an array');
+assert.ok(searchDecoded.rows.length > 0, 'search should return at least one vod item');
 
 const detailJson = JSON.parse(spider.mapSearchResult({ code: 200, data: decoded }, 'detail'));
 assert.equal(detailJson.list.length, 1);
