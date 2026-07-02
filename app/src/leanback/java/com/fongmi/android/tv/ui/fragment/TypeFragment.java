@@ -27,8 +27,10 @@ import com.fongmi.android.tv.bean.Style;
 import com.fongmi.android.tv.bean.Value;
 import com.fongmi.android.tv.bean.Vod;
 import com.fongmi.android.tv.databinding.FragmentTypeBinding;
+import com.fongmi.android.tv.feature.shortvideo.ShortVideo;
 import com.fongmi.android.tv.model.SiteViewModel;
 import com.fongmi.android.tv.ui.activity.CollectActivity;
+import com.fongmi.android.tv.ui.activity.ShortVideoActivity;
 import com.fongmi.android.tv.ui.activity.VideoActivity;
 import com.fongmi.android.tv.ui.base.BaseFragment;
 import com.fongmi.android.tv.ui.custom.CustomRowPresenter;
@@ -53,6 +55,7 @@ public class TypeFragment extends BaseFragment implements CustomScroller.Callbac
     private CustomScroller mScroller;
     private SiteViewModel mViewModel;
     private List<Filter> mFilters;
+    private final List<Vod> mVideos = new ArrayList<>();
     private boolean headerVisible;
     private boolean filterVisible;
 
@@ -157,6 +160,7 @@ public class TypeFragment extends BaseFragment implements CustomScroller.Callbac
 
     private void getVideo() {
         mLast = null;
+        mVideos.clear();
         checkFilter();
         mScroller.reset();
         getVideo(getTypeId(), "1");
@@ -178,6 +182,7 @@ public class TypeFragment extends BaseFragment implements CustomScroller.Callbac
 
     private void addVideo(Result result) {
         Style style = result.getStyle(getStyle());
+        mVideos.addAll(result.getList());
         if (style.isList()) mAdapter.addAll(mAdapter.size(), result.getList());
         else addGrid(result.getList(), style);
         checkMore();
@@ -257,6 +262,7 @@ public class TypeFragment extends BaseFragment implements CustomScroller.Callbac
             headerVisible = mBinding.recycler.isHeaderVisible();
         } else {
             if (getSite().isIndex()) CollectActivity.start(requireActivity(), item.getName());
+            else if (ShortVideo.isSupported(getKey(), item.getId())) ShortVideoActivity.start(requireActivity(), getKey(), mVideos, item);
             else VideoActivity.start(requireActivity(), getKey(), item.getId(), item.getName(), item.getPic(), isFolder() ? item.getName() : null);
         }
     }

@@ -22,8 +22,10 @@ import com.fongmi.android.tv.bean.Result;
 import com.fongmi.android.tv.bean.Site;
 import com.fongmi.android.tv.bean.Vod;
 import com.fongmi.android.tv.databinding.FragmentCollectBinding;
+import com.fongmi.android.tv.feature.shortvideo.ShortVideo;
 import com.fongmi.android.tv.model.SiteViewModel;
 import com.fongmi.android.tv.ui.activity.FolderActivity;
+import com.fongmi.android.tv.ui.activity.ShortVideoActivity;
 import com.fongmi.android.tv.ui.activity.VideoActivity;
 import com.fongmi.android.tv.ui.adapter.CollectAdapter;
 import com.fongmi.android.tv.ui.adapter.SearchAdapter;
@@ -158,6 +160,7 @@ public class CollectFragment extends BaseFragment implements MenuProvider, Colle
     @Override
     public void onItemClick(Vod item) {
         if (item.isFolder()) FolderActivity.start(requireActivity(), item.getSiteKey(), Result.folder(item));
+        else if (ShortVideo.isSupported(item.getSiteKey(), item.getId())) ShortVideoActivity.start(requireActivity(), item.getSiteKey(), mSearchAdapter.getItems(), item);
         else VideoActivity.collect(requireActivity(), item.getSiteKey(), item.getId(), item.getName(), item.getPic());
     }
 

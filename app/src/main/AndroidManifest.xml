@@ -79,6 +79,13 @@
             android:process=":error_activity"
             android:theme="@style/Theme.Crash" />
 
+        <activity
+            android:name=".ui.activity.ShortVideoActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="false"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.App" />
+
         <receiver
             android:name=".receiver.ActionReceiver"
             android:exported="false">

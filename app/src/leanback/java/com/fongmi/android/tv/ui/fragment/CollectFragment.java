@@ -19,7 +19,9 @@ import com.fongmi.android.tv.bean.Collect;
 import com.fongmi.android.tv.bean.Result;
 import com.fongmi.android.tv.bean.Vod;
 import com.fongmi.android.tv.databinding.FragmentTypeBinding;
+import com.fongmi.android.tv.feature.shortvideo.ShortVideo;
 import com.fongmi.android.tv.model.SiteViewModel;
+import com.fongmi.android.tv.ui.activity.ShortVideoActivity;
 import com.fongmi.android.tv.ui.activity.VideoActivity;
 import com.fongmi.android.tv.ui.activity.VodActivity;
 import com.fongmi.android.tv.ui.base.BaseFragment;
@@ -42,6 +44,7 @@ public class CollectFragment extends BaseFragment implements CustomScroller.Call
     private SiteViewModel mViewModel;
     private Collect mCollect;
     private String mKeyword;
+    private final List<Vod> mVideos = new ArrayList<>();
 
     public static CollectFragment newInstance(String keyword, Collect collect) {
         Bundle args = new Bundle();
@@ -95,7 +98,7 @@ public class CollectFragment extends BaseFragment implements CustomScroller.Call
         if (size == 0) return false;
         size = Math.min(size, items.size());
         mLast.addAll(mLast.size(), items.subList(0, size));
-        addVideo(items.subList(size, items.size()));
+        addVideoRows(items.subList(size, items.size()));
         return true;
     }
 
@@ -104,6 +107,11 @@ public class CollectFragment extends BaseFragment implements CustomScroller.Call
     }
 
     public void addVideo(List<Vod> items) {
+        mVideos.addAll(items);
+        addVideoRows(items);
+    }
+
+    private void addVideoRows(List<Vod> items) {
         if (checkLastSize(items) || getActivity() == null || getActivity().isFinishing()) return;
         List<ListRow> rows = new ArrayList<>();
         VodPresenter presenter = new VodPresenter(this);
@@ -119,6 +127,7 @@ public class CollectFragment extends BaseFragment implements CustomScroller.Call
     public void onItemClick(Vod item) {
         requireActivity().setResult(Activity.RESULT_OK);
         if (item.isFolder()) VodActivity.start(requireActivity(), item.getSiteKey(), Result.folder(item));
+        else if (ShortVideo.isSupported(item.getSiteKey(), item.getId())) ShortVideoActivity.start(requireActivity(), item.getSiteKey(), mVideos, item);
         else VideoActivity.collect(requireActivity(), item.getSiteKey(), item.getId(), item.getName(), item.getPic());
     }
 

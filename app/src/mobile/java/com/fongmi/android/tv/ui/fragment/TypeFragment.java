@@ -20,8 +20,10 @@ import com.fongmi.android.tv.bean.Style;
 import com.fongmi.android.tv.bean.Value;
 import com.fongmi.android.tv.bean.Vod;
 import com.fongmi.android.tv.databinding.FragmentTypeBinding;
+import com.fongmi.android.tv.feature.shortvideo.ShortVideo;
 import com.fongmi.android.tv.model.SiteViewModel;
 import com.fongmi.android.tv.ui.activity.SearchActivity;
+import com.fongmi.android.tv.ui.activity.ShortVideoActivity;
 import com.fongmi.android.tv.ui.activity.VideoActivity;
 import com.fongmi.android.tv.ui.adapter.VodAdapter;
 import com.fongmi.android.tv.ui.base.BaseFragment;
@@ -196,6 +198,7 @@ public class TypeFragment extends BaseFragment implements CustomScroller.Callbac
             getParent().openFolder(item.getId(), mExtends);
         } else {
             if (getSite().isIndex()) SearchActivity.start(requireActivity(), item.getName());
+            else if (ShortVideo.isSupported(getKey(), item.getId())) ShortVideoActivity.start(requireActivity(), getKey(), mAdapter.getItems(), item);
             else VideoActivity.start(requireActivity(), getKey(), item.getId(), item.getName(), item.getPic(), isFolder() ? item.getName() : null);
         }
     }

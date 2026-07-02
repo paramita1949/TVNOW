@@ -42,6 +42,7 @@ import com.fongmi.android.tv.event.CastEvent;
 import com.fongmi.android.tv.event.ConfigEvent;
 import com.fongmi.android.tv.event.RefreshEvent;
 import com.fongmi.android.tv.event.ServerEvent;
+import com.fongmi.android.tv.feature.shortvideo.ShortVideo;
 import com.fongmi.android.tv.impl.Callback;
 import com.fongmi.android.tv.model.SiteViewModel;
 import com.fongmi.android.tv.player.Source;
@@ -398,6 +399,7 @@ public class HomeActivity extends BaseActivity implements CustomTitleView.Listen
     public void onItemClick(Vod item) {
         if (item.isAction()) mViewModel.action(getHome().getKey(), item.getAction());
         else if (getHome().isIndex()) CollectActivity.start(this, item.getName());
+        else if (ShortVideo.isSupported(getHome().getKey(), item.getId())) ShortVideoActivity.start(this, getHome().getKey(), mResult.getList(), item);
         else VideoActivity.start(this, getHome().getKey(), item.getId(), item.getName(), item.getPic());
     }
 

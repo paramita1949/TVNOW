@@ -11,6 +11,26 @@
       "timeout": 20
     },
     {
+      "key": "a91",
+      "name": "抖阴",
+      "type": 3,
+      "api": "assets://js/a91.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "timeout": 20
+    },
+    {
+      "key": "madou",
+      "name": "麻豆社",
+      "type": 3,
+      "api": "assets://js/madou.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "timeout": 20
+    },
+    {
       "key": "ttp231",
       "name": "偷偷啪A",
       "type": 3,
